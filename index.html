@@ -208,8 +208,7 @@
                 "Mỗi ngày trôi\n qua đều nhẹ nhàng\n với em",
                 "Buồn vui gì\n cũng có anh\n bên cạnh",
                 "Anh muốn đi\n cùng em thêm\n nhiều năm nữa",
-                "Thương em\n rất nhều ❤"
-
+                "Thương em\n rất nhều ❤",
             ];
 
             var currentTextIndex = 0;
@@ -399,25 +398,35 @@
         <!-- ================= CLICK START ================= -->
 
         <script>
-            function startLove() {
+            function startLove(e) {
                 if (started) return;
                 started = true;
 
                 document.getElementById("tapHint").style.display = "none";
 
+                const audio = document.getElementById("bgMusic");
+                audio.volume = 0.8;
+                audio.currentTime = 0;
+
+                // 🔓 UNLOCK + PLAY TRONG CÙNG GESTURE
+                audio
+                    .play()
+                    .then(() => {
+                        // OK cho Android + iOS
+                    })
+                    .catch(() => {
+                        console.log("Audio bị chặn");
+                    });
+
+                // START TEXT
                 initCountdownCanvas();
                 createTextParticles(countdownTexts[0]);
                 countdownStage = "forming";
                 updateCountdownParticles();
-
-                document
-                    .getElementById("bgMusic")
-                    .play()
-                    .catch(() => {});
             }
 
-            document.addEventListener("click", startLove);
-            document.addEventListener("touchstart", startLove);
+            document.addEventListener("touchstart", startLove, { once: true });
+            document.addEventListener("click", startLove, { once: true });
         </script>
     </body>
 </html>
