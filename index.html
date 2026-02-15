@@ -82,6 +82,23 @@
             const ctx = canvas.getContext("2d");
             canvas.width = innerWidth;
             canvas.height = innerHeight;
+            const FIRE_COLORS = [
+                "#ff4d4d", // đỏ
+                "#ff6b6b",
+                "#ff69b4", // hồng
+                "#ff85c1",
+                "#ffd700", // vàng
+                "#ffe066",
+                "#7bed9f", // xanh lá
+                "#2ed573",
+                "#00e5ff", // xanh dương
+                "#1e90ff",
+                "#70a1ff",
+                "#b388ff", // tím
+                "#a29bfe",
+                "#d980fa",
+                "#f368e0",
+            ];
 
             const isMobile = innerWidth < 768;
             const fireworks = [];
@@ -114,15 +131,21 @@
             class Firework {
                 constructor(type) {
                     this.type = type;
+                    this.color =
+                        FIRE_COLORS[
+                            Math.floor(Math.random() * FIRE_COLORS.length)
+                        ];
                     this.x = Math.random() * canvas.width;
                     this.y = canvas.height;
                     this.ty = Math.random() * canvas.height * 0.5;
                     this.vy = -(isMobile ? 6 : 8);
                 }
+
                 update() {
                     this.y += this.vy;
                     if (this.y <= this.ty) {
-                        explode(this.x, this.y, this.type);
+                        explode(this.x, this.y, this.type, this.color);
+
                         return false;
                     }
                     return true;
@@ -133,7 +156,7 @@
                 }
             }
 
-            function explode(x, y, type) {
+            function explode(x, y, type, color) {
                 let count = isMobile ? 20 : 30;
                 let angleStep = (Math.PI * 2) / count;
 
@@ -153,6 +176,7 @@
                         vx,
                         vy,
                         life: isMobile ? 40 : 60,
+                        color,
                     });
                 }
             }
@@ -186,7 +210,7 @@
                     p.y += p.vy;
                     p.life--;
 
-                    ctx.fillStyle = "#fff";
+                    ctx.fillStyle = p.color;
                     ctx.fillRect(p.x, p.y, 2, 2);
 
                     if (p.life <= 0 || particles.length > MAX_PARTICLES)
@@ -202,13 +226,15 @@
             /* ================= COUNTDOWN PARTICLES ================= */
             var countdownParticles = [];
             var countdownTexts = [
-                "❤",
-                "HAPPY NEW YEAR\n 2026, EIU",
-                "Năm mới mong\n em luôn cười\n thật tươi",
-                "Mỗi ngày trôi\n qua đều nhẹ nhàng\n với em",
-                "Buồn vui gì\n cũng có anh\n bên cạnh",
-                "Anh muốn đi\n cùng em thêm\n nhiều năm nữa",
-                "Thương em\n rất nhều ❤",
+                " HAPY NEW YEAR\n 2026✋✋✋",
+                "Chúc a luôn\n mạnh khoẻ",
+                "Công việc\n hanh thông",
+                "Vạn sự như ý",
+                "Gặp nhiều may mắn",
+                "Luôn bình an❤️",
+                "Năm mới nhiều niềm\n vui và hạnh phúc\n ⭐️⭐️⭐️⭐️⭐️",
+                "Yêu anh nhiều❤️",
+                "Em.",
             ];
 
             var currentTextIndex = 0;
@@ -263,7 +289,8 @@
                 tempCanvas.height = lineHeight * lines.length + fontSize;
 
                 tempCtx.font = `bold ${fontSize}px Arial`;
-                tempCtx.fillStyle = "#fff";
+                tempCtx.fillStyle = "#ff69b4";
+
                 tempCtx.textAlign = "center";
                 tempCtx.textBaseline = "middle";
                 tempCtx.shadowColor = "#800080";
@@ -355,7 +382,8 @@
 
                     countdownCtx.beginPath();
                     countdownCtx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    countdownCtx.fillStyle = "#fff";
+                    //thay màu mảng chữ
+                    countdownCtx.fillStyle = "#FF0000";
                     countdownCtx.fill();
                 });
 
